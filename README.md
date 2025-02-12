@@ -3,8 +3,7 @@
 <h1 align="center">Hola, somos MAPA Consulting👋</h1><h2 align="center">Y este es nuestro proyecto final para el Bootcamp de Data Analytics de Henry</h2>
 </div>
 <div align="center">
-<img src="https://lucasgebhardt.com.ar/wp-content/uploads/2024/05/Black-and-Blue-Technology-Logo.png">
-<img src="https://lucasgebhardt.com.ar/wp-content/uploads/2024/05/Diseno-sin-titulo-9.png">
+<img src="https://github.com/MAPAconsultora/Proyecto_Final_Henry/blob/main/Imagen.jpeg">
 </div>
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/lucasgeb/Proyecto-Final-Henry?style=for-the-badge)
