@@ -116,7 +116,5 @@ El dataset incluye datos de más de 4,800 jugadores, 65,000 partidos, estadísti
 <img src="https://img.shields.io/badge/Kaggle-20BEFF.svg?style=for-the-badge&logo=Kaggle&logoColor=white" />
 <img src="https://img.shields.io/badge/Canva-00C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white" />
 
-## Autores
 
-| [<img src="https://avatars.githubusercontent.com/u/81046230?v=4" width=115><br><sub>Lucas Gebhardt</sub>](https://github.com/lucasgeb) | [<img src="https://avatars.githubusercontent.com/u/150839933?v=4" width=115><br><sub>Laura Constanzo</sub>](https://github.com/LGConstanzo) | [<img src="https://avatars.githubusercontent.com/u/110009701?v=4" width=115><br><sub>Mauro Diaz Ruffino</sub>](https://github.com/TitoGod) | [<img src="https://avatars.githubusercontent.com/u/70545645?v=4" width=115><br><sub>Fernando Colazo</sub>](https://github.com/Frrcolazo123/) | [<img src="https://avatars.githubusercontent.com/u/66878638?v=4" width=115><br><sub>Luis Velasquez</sub>](https://github.com/Velasquez4701) |
 | :---: | :---: | :---: | :---: | :---: |# Proyecto_Final_Henry
