@@ -1,0 +1,338 @@
+USE DAFT10_PF;
+GO
+CREATE TABLE common_player_info (
+    person_id INT PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    display_first_last VARCHAR(255),
+    display_last_comma_first VARCHAR(255),
+    display_fi_last VARCHAR(255),
+    player_slug VARCHAR(255),
+    birthdate VARCHAR(50),
+    school VARCHAR(255),
+    country VARCHAR(255),
+    last_affiliation VARCHAR(255),
+    height VARCHAR(50),
+    weight FLOAT,
+    season_exp FLOAT,
+    jersey VARCHAR(50),
+    position VARCHAR(50),
+    rosterstatus VARCHAR(50),
+    games_played_current_season_flag VARCHAR(50),
+    team_id INT,
+    team_name VARCHAR(255),
+    team_abbreviation VARCHAR(50),
+    team_code VARCHAR(50),
+    team_city VARCHAR(255),
+    playercode VARCHAR(50),
+    from_year FLOAT,
+    to_year FLOAT,
+    dleague_flag VARCHAR(50),
+    nba_flag VARCHAR(50),
+    games_played_flag VARCHAR(50),
+    draft_year VARCHAR(50),
+    draft_round VARCHAR(50),
+    draft_number VARCHAR(50),
+    greatest_75_flag VARCHAR(50)
+);
+GO
+CREATE TABLE draft_combine_stats (
+    season INT,
+    player_id INT,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    player_name VARCHAR(255),
+    position VARCHAR(50),
+    height_wo_shoes FLOAT,
+    height_wo_shoes_ft_in VARCHAR(50),
+    height_w_shoes FLOAT,
+    height_w_shoes_ft_in VARCHAR(50),
+    weight FLOAT,
+    wingspan FLOAT,
+    wingspan_ft_in VARCHAR(50),
+    standing_reach FLOAT,
+    standing_reach_ft_in VARCHAR(50),
+    body_fat_pct FLOAT,
+    hand_length FLOAT,
+    hand_width FLOAT,
+    standing_vertical_leap FLOAT,
+    max_vertical_leap FLOAT,
+    lane_agility_time FLOAT,
+    modified_lane_agility_time FLOAT,
+    three_quarter_sprint FLOAT,
+    bench_press FLOAT,
+    spot_fifteen_corner_left VARCHAR(50),
+    spot_fifteen_break_left VARCHAR(50),
+    spot_fifteen_top_key VARCHAR(50),
+    spot_fifteen_break_right VARCHAR(50),
+    spot_fifteen_corner_right VARCHAR(50),
+    spot_college_corner_left VARCHAR(50),
+    spot_college_break_left VARCHAR(50),
+    spot_college_top_key VARCHAR(50),
+    spot_college_break_right VARCHAR(50),
+    spot_college_corner_right VARCHAR(50),
+    spot_nba_corner_left VARCHAR(50),
+    spot_nba_break_left VARCHAR(50),
+    spot_nba_top_key VARCHAR(50),
+    spot_nba_break_right VARCHAR(50),
+    spot_nba_corner_right VARCHAR(50),
+    off_drib_fifteen_break_left VARCHAR(50),
+    off_drib_fifteen_top_key VARCHAR(50),
+    off_drib_fifteen_break_right VARCHAR(50),
+    off_drib_college_break_left VARCHAR(50),
+    off_drib_college_top_key VARCHAR(50),
+    off_drib_college_break_right VARCHAR(50),
+    on_move_fifteen VARCHAR(50),
+    on_move_college VARCHAR(50)
+);
+GO
+CREATE TABLE draft_history (
+    person_id INT,
+    player_name VARCHAR(255),
+    season INT,
+    round_number INT,
+    round_pick INT,
+    overall_pick INT,
+    draft_type VARCHAR(50),
+    team_id INT,
+    team_city VARCHAR(255),
+    team_name VARCHAR(255),
+    team_abbreviation VARCHAR(50),
+    organization VARCHAR(255),
+    organization_type VARCHAR(50),
+    player_profile_flag INT
+);
+GO
+/*CREATE TABLE play_by_play (
+    game_id INT,
+    eventnum INT,
+    eventmsgtype INT,
+    eventmsgactiontype INT,
+    period INT,
+    wctimestring VARCHAR(50),
+    pctimestring VARCHAR(50),
+    homedescription VARCHAR(255),
+    neutraldescription VARCHAR(255),
+    visitordescription VARCHAR(255),
+    score VARCHAR(50),
+    scoremargin VARCHAR(50),
+    person1type FLOAT,
+    player1_id INT,
+    player1_name VARCHAR(255),
+    player1_team_id FLOAT,
+    player1_team_city VARCHAR(255),
+    player1_team_nickname VARCHAR(255),
+    player1_team_abbreviation VARCHAR(50),
+    person2type FLOAT,
+    player2_id INT,
+    player2_name VARCHAR(255),
+    player2_team_id FLOAT,
+    player2_team_city VARCHAR(255),
+    player2_team_nickname VARCHAR(255),
+    player2_team_abbreviation VARCHAR(50),
+    person3type FLOAT,
+    player3_id INT,
+    player3_name VARCHAR(255),
+    player3_team_id FLOAT,
+    player3_team_city VARCHAR(255),
+    player3_team_nickname VARCHAR(255),
+    player3_team_abbreviation VARCHAR(50),
+    video_available_flag INT
+);
+GO*/
+CREATE TABLE officials (
+    game_id INT,
+    official_id INT,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    jersey_num FLOAT
+);
+GO
+CREATE TABLE player (
+    id INT,
+    full_name VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    is_active INT
+);
+GO
+CREATE TABLE inactive_players (
+    game_id INT,
+    player_id INT,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    jersey_num FLOAT,
+    team_id INT,
+    team_city VARCHAR(255),
+    team_name VARCHAR(255),
+    team_abbreviation VARCHAR(50)
+);
+GO
+CREATE TABLE game (
+	season_id INT,
+	team_id_home INT,
+	team_abbreviation_home VARCHAR(255)
+	team_name_home VARCHAR(255),
+	game_id INT
+	game_date DATE,
+	matchup_home VARCHAR(255),
+	wl_home VARCHAR(255),
+	min INT,
+	fgm_home FLOAT,
+	fga_home FLOAT,
+	fg_pct_home FLOAT,
+	fg3m_home FLOAT,
+	fg3a_home FLOAT,
+	fg3_pct_home FLOAT,
+	ftm_home FLOAT,
+	fta_home FLOAT,
+	ft_pct_home FLOAT,
+	oreb_home FLOAT,
+	dreb_home FLOAT,
+	reb_home FLOAT,
+	ast_home FLOAT,
+	stl_home FLOAT,
+	tov_home FLOAT,
+	pf_home FLOAT,
+	plus_minus_home INT,
+	video_available_home INT,
+	team_id_away INT,
+	team_abbreviation_away VARCHAR(255),
+	team_name_away VARCHAR(255),
+	matchup_away VARCHAR(255),
+	wl_away VARCHAR(255),
+	fgm_away FLOAT,
+	fga_away FLOAT,
+	fg_pct_away FLOAT,
+	fg3m_away FLOAT,
+	fg3a_away FLOAT,
+	fg3_pct_away FLOAT,
+	ftm_away FLOAT,
+	fta_away FLOAT,
+	ft_pct_away FLOAT,
+	oreb_away FLOAT,
+	dreb_away FLOAT,
+	reb_away FLOAT,
+	ast_away FLOAT,
+	stl_away FLOAT,
+	blk_away FLOAT,
+	tov_away FLOAT,
+	pf_away FLOAT,
+	pts_away FLOAT,
+	plus_minus_away INT,
+	video_available_away INT,
+	season_type VARCHAR(255)
+	);
+GO
+CREATE TABLE game_info(
+	game_id INT,
+	game_date DATETIME,
+	attendance FLOAT,
+	game_time TIME
+	);
+GO
+CREATE TABLE game_summary(
+	game_date_est DATE,
+	game_sequence FLOAT,
+	game_id INT,
+	game_status_id INT,
+	game_status_text VARCHAR(100),
+	gamecode NVARCHAR(255),
+	home_team_id INT,
+	visitor_team_id INT,
+	season VARCHAR(100),
+	live_period INT,
+	natl_tv_broadcaster_abbreviation VARCHAR(255),
+	live_period_time_bcast NVARCHAR(100),
+	wh_status INT
+	);
+GO
+CREATE TABLE line_score(
+	game_date_est DATE,
+	game_sequence INT,
+	game_id INT,
+	team_id_home INT,
+	team_abbreviation_home VARCHAR(10),
+	team_city_name_home NVARCHAR(255),
+	team_nickname_home VARCHAR(100),
+	team_wins_losses_home NVARCHAR(100),
+	pts_qtr1_home FLOAT,
+	pts_qtr2_home FLOAT,
+	pts_qtr3_home FLOAT,
+	pts_home FLOAT,
+	team_id_away INT,
+	team_abbreviation_away VARCHAR(10)
+	team_city_name_away NVARCHAR(255),
+	team_nickname_away VARCHAR(100),
+	team_wins_losses_away NVARCHAR(100)
+	pts_qtr1_away FLOAT,
+	pts_qtr2_away FLOAT,
+	pts_qtr3_away FLOAT,
+	pts_qtr4_away FLOAT,
+	pts_away FLOAT
+	);
+GO
+CREATE TABLE other_stats(
+	game_id INT,
+	league_id INT,
+	team_id_home INT,
+	team_abbreviation_home VARCHAR(100),
+	team_city_home VARCHAR(100),
+	pts_paint_home INT,
+	pts_2nd_chance_home INT,
+	pts_fb_home INT,
+	largest_lead_home INT,
+	lead_changes INT,
+	times_tied INT,
+	team_turnovers_home FLOAT,
+	total_turnovers_home FLOAT,
+	team_rebounds_home FLOAT,
+	pts_off_to_home FLOAT,
+	team_id_away INT,
+	team_abbreviation_away VARCHAR(100),
+	team_city_away VARCHAR(100),
+	pts_paint_away INT,
+	pts_2nd_chance_away INT,
+	pts_fb_away INT,
+	largest_lead_away INT,
+	team_turnovers_away FLOAT,
+	total_turnovers_away FLOAT,
+	team_rebounds_away FLOAT,
+	pts_off_to_away FLOAT
+	);
+GO
+CREATE TABLE team(
+	id INT,
+	full_name VARCHAR(100),
+	abbreviation VARCHAR(100),
+	nickname VARCHAR(100),
+	city VARCHAR(100),
+	state VARCHAR(100),
+	year_founded FLOAT
+	);
+GO
+CREATE TABLE team_details(
+	team_id INT
+	abbreviation VARCHAR(100),
+	nickname VARCHAR(100),
+	yearfounded FLOAT,
+	city VARCHAR(100),
+	arena VARCHAR(100),
+	arenacapacity FLOAT,
+	owner NVARCHAR(100),
+	generalmanager NVARCHAR(100),
+	headcoach NVARCHAR(100),
+	dleagueaffiliation NVARCHAR(100),
+	facebook NVARCHAR(100),
+	instagram NVARCHAR(100),
+	twitter NVARCHAR(100)
+	);
+GO
+CREATE TABLE team_history(
+	team_id INT,
+	city VARCHAR(100),
+	nickname VARCHAR(100),
+	year_founded INT,
+	year_active_till INT
+	);
+GO
