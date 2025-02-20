@@ -1,0 +1,373 @@
+USE DAFT10_PF
+GO
+-- Tabla common_player_info
+ALTER TABLE common_player_info
+ALTER COLUMN person_id INT NOT NULL;
+GO
+ALTER TABLE common_player_info
+ADD CONSTRAINT PK_common_player_info PRIMARY KEY (person_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Tabla draft_combine_stats
+ALTER TABLE draft_combine_stats
+ALTER COLUMN player_id INT NOT NULL;
+GO
+ALTER TABLE draft_combine_stats
+ADD id_draft_combine_stats INT IDENTITY (1,1)
+GO
+ALTER TABLE draft_combine_stats
+ADD CONSTRAINT PK_id_draft_combine_stats PRIMARY KEY (id_draft_combine_stats)
+GO
+
+/*ALTER TABLE draft_combine_stats
+ADD CONSTRAINT FK_draft_combine_common_player
+FOREIGN KEY (player_id) REFERENCES common_player_info(person_id);*/
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Tabla draft_history
+
+ALTER TABLE draft_history
+ADD id_draft_history INT IDENTITY(1,1)
+GO
+ALTER TABLE draft_history
+ADD CONSTRAINT PK_id_draft_history PRIMARY KEY (id_draft_history)
+GO
+/*ALTER TABLE draft_history
+ADD CONSTRAINT FK_draft_history_common_player
+FOREIGN KEY (person_id) REFERENCES common_player_info(person_id);*/
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Tabla game
+
+ALTER TABLE game
+ALTER COLUMN game_id INT NOT NULL;
+GO
+SELECT game_id, COUNT(*)
+FROM game
+GROUP BY game_id
+HAVING COUNT(*) > 1;
+GO
+WITH CTE AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY game_id ORDER BY game_id) AS row_num
+    FROM game
+)
+DELETE FROM CTE
+WHERE row_num > 1;
+DELETE FROM game WHERE game_id IS NULL;
+GO
+ALTER TABLE game
+ADD CONSTRAINT PK_game PRIMARY KEY (game_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Tabla line_score
+ALTER TABLE line_score
+ADD id_line_score INT IDENTITY(1,1);
+GO
+ALTER TABLE line_score
+ADD CONSTRAINT PK_line_score PRIMARY KEY (id_line_score);
+GO
+/*ALTER TABLE line_score
+ADD CONSTRAINT FK_line_score_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);*/
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Tabla game_summary
+ALTER TABLE game_summary
+ADD id_game_summary INT IDENTITY(1,1);
+GO
+ALTER TABLE game_summary
+ADD CONSTRAINT PK_id_game_summary PRIMARY KEY (id_game_summary)
+GO
+/*ALTER TABLE game_summary
+ADD CONSTRAINT FK_game_summary_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);*/
+
+--------------------------------------------------------------------------------------------------------------------------------------
+--tabla game_info
+ALTER TABLE game_info
+ADD id_game_info INT IDENTITY(1,1);
+GO
+ALTER TABLE game_info
+ADD CONSTRAINT PK_id_game_info PRIMARY KEY (id_game_info);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--tabla inactive_player_id
+
+ALTER TABLE inactive_players
+ADD id_inactive_players INT IDENTITY(1,1);
+GO
+ALTER TABLE inactive_players
+ADD CONSTRAINT PK_id_inactive_players PRIMARY KEY (id_inactive_players);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--tabla officials
+
+ALTER TABLE officials
+ALTER COLUMN official_id INT NOT NULL;
+GO
+SELECT official_id, COUNT(*)
+FROM officials
+GROUP BY official_id
+HAVING COUNT(*) > 1;
+GO
+WITH CTE AS (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY official_id ORDER BY official_id) AS row_num
+    FROM officials
+)
+DELETE FROM CTE
+WHERE row_num > 1;
+GO
+ALTER TABLE officials
+ADD CONSTRAINT PK_official_id PRIMARY KEY (official_id)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- tabla other_stats
+
+ALTER TABLE other_stats
+ADD id_other_stats INT IDENTITY(1,1)
+GO
+ALTER TABLE other_stats 
+ADD CONSTRAINT PK_id_other_stats PRIMARY KEY (id_other_stats)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--tabla player 
+EXEC sp_rename 'player.player_id', 'person_id', 'COLUMN';
+GO
+
+ALTER TABLE player
+ALTER COLUMN person_id INT NOT NULL;
+GO
+ALTER TABLE player
+ADD player_id INT IDENTITY(1,1)
+GO
+ALTER TABLE player
+ADD CONSTRAINT PK_player_id PRIMARY KEY (player_id)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--tabla team
+EXEC sp_rename 'team.id', 'team_id', 'COLUMN';
+GO
+ALTER TABLE team
+ALTER COLUMN team_id BIGINT NOT NULL;
+GO
+ALTER TABLE team
+ADD CONSTRAINT PK_team_id PRIMARY KEY (team_id)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--tabla team_details
+
+ALTER TABLE team_details
+ADD id_team_details INT IDENTITY(1,1)
+GO
+ALTER TABLE team_details
+ADD CONSTRAINT PK_id_team_details PRIMARY KEY (id_team_details)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- tabla_history
+
+ALTER TABLE team_history
+ADD id_team_history INT IDENTITY (1,1)
+GO
+ALTER TABLE team_history
+ADD CONSTRAINT PK_id_team_history PRIMARY KEY (id_team_history)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+/*ALTER TABLE player
+DROP CONSTRAINT PK_player_id*/
+--------------------------------------------------------------------------------------------------------------------------------------
+--RELACIONES ENTRE TABLAS FK 
+
+-- Relación entre common_player_info y team
+
+SELECT DISTINCT team_id 
+FROM common_player_info
+WHERE team_id NOT IN (SELECT team_id FROM team);
+GO
+DELETE FROM common_player_info
+WHERE team_id NOT IN (SELECT team_id FROM team);
+GO
+
+ALTER TABLE common_player_info
+ADD CONSTRAINT FK_common_player_info_team
+FOREIGN KEY (team_id) REFERENCES team(team_id)
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre draft_history y common_player_info
+SELECT DISTINCT person_id
+FROM draft_history
+WHERE person_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+DELETE FROM draft_history
+WHERE person_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+ALTER TABLE draft_history
+ALTER COLUMN person_id INT;
+GO
+ALTER TABLE draft_history
+ADD CONSTRAINT FK_draft_history_common_player_info
+FOREIGN KEY (person_id) REFERENCES common_player_info(person_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre draft_combine_stats y common_player_info
+SELECT DISTINCT player_id
+FROM draft_combine_stats
+WHERE player_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+DELETE FROM draft_combine_stats
+WHERE player_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+ALTER TABLE draft_combine_stats
+ADD CONSTRAINT FK_draft_combine_stats_common_player_info
+FOREIGN KEY (player_id) REFERENCES common_player_info(person_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre draft_history y team
+SELECT DISTINCT team_id
+FROM draft_history
+WHERE team_id NOT IN (SELECT team_id FROM team);
+GO
+DELETE FROM draft_history
+WHERE team_id NOT IN (SELECT team_id FROM team);
+GO
+ALTER TABLE draft_history
+ADD CONSTRAINT FK_draft_history_team
+FOREIGN KEY (team_id) REFERENCES team(team_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre inactive_players y game
+-- Cambiar el tipo de datos de inactive_players.game_id para que coincida con game.game_id
+ALTER TABLE inactive_players
+ALTER COLUMN game_id INT;  -- O el tipo de datos que coincida con game.game_id
+GO
+ALTER TABLE inactive_players
+ADD CONSTRAINT FK_inactive_players_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre inactive_players y common_player_info
+ALTER TABLE inactive_players
+ALTER COLUMN player_id INT;  -- O el tipo de datos adecuado
+GO
+SELECT player_id
+FROM inactive_players
+WHERE player_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+DELETE FROM inactive_players
+WHERE player_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+ALTER TABLE inactive_players
+ADD CONSTRAINT FK_inactive_players_common_player_info
+FOREIGN KEY (player_id) REFERENCES common_player_info(person_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre inactive_players y team
+SELECT team_id
+FROM inactive_players
+WHERE team_id NOT IN (SELECT team_id FROM team);
+GO
+DELETE FROM inactive_players
+WHERE team_id NOT IN (SELECT team_id FROM team);
+GO
+ALTER TABLE inactive_players
+ADD CONSTRAINT FK_inactive_players_team
+FOREIGN KEY (team_id) REFERENCES team(team_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre game y team (team_id_home)
+
+INSERT INTO team (team_id)
+SELECT DISTINCT team_id_home
+FROM game
+WHERE team_id_home NOT IN (SELECT team_id FROM team);
+GO
+ALTER TABLE game
+ADD CONSTRAINT FK_game_team_home
+FOREIGN KEY (team_id_home) REFERENCES team(team_id);
+GO
+
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre game_info y game
+ALTER TABLE game_info
+ALTER COLUMN game_id INT;  -- O el tipo de datos adecuado
+GO
+ALTER TABLE game_info
+ADD CONSTRAINT FK_game_info_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre game_summary y game
+
+ALTER TABLE game_summary
+ALTER COLUMN game_id INT;  -- O el tipo de datos adecuado
+GO
+ALTER TABLE game_summary
+ADD CONSTRAINT FK_game_summary_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre line_score y game
+ALTER TABLE line_score
+ALTER COLUMN game_id INT;  -- O el tipo de datos adecuado
+GO
+ALTER TABLE line_score
+ADD CONSTRAINT FK_line_score_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre other_stats y game
+ALTER TABLE other_stats
+ALTER COLUMN game_id INT;  -- O el tipo de datos adecuado
+GO
+ALTER TABLE other_stats
+ADD CONSTRAINT FK_other_stats_game
+FOREIGN KEY (game_id) REFERENCES game(game_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+/*-- Relación entre other_stats y team (team_id_home)
+
+ALTER TABLE other_stats
+ADD CONSTRAINT FK_other_stats_team_home
+FOREIGN KEY (team_id_home) REFERENCES team(team_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre other_stats y team (team_id_away)
+ALTER TABLE other_stats
+ADD CONSTRAINT FK_other_stats_team_away
+FOREIGN KEY (team_id_away) REFERENCES team(team_id);
+GO*/
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre team_details y team
+ALTER TABLE team_details
+ADD CONSTRAINT FK_team_details_team
+FOREIGN KEY (team_id) REFERENCES team(team_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+-- Relación entre team_history y team
+ALTER TABLE team_history
+ADD CONSTRAINT FK_team_history_team
+FOREIGN KEY (team_id) REFERENCES team(team_id);
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--relacion entre officials y game
+ALTER TABLE officials
+ALTER COLUMN game_id INT;  -- O el tipo de datos adecuado
+GO
+ALTER TABLE officials
+ADD CONSTRAINT FK_officials_game
+FOREIGN KEY (game_id) REFERENCES game(game_id)
+GO
+--------------------------------------------------------------------------------------------------------------------------------------
+--Relacion entre player y common_player_info
+EXEC sp_helpconstraint 'player'; 
+GO
+ALTER TABLE player
+ALTER COLUMN person_id INT;
+GO
+SELECT person_id
+FROM player
+WHERE person_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+DELETE FROM player
+WHERE person_id NOT IN (SELECT person_id FROM common_player_info);
+GO
+
+ALTER TABLE player
+ADD CONSTRAINT FK_player_common_player_info
+FOREIGN KEY (person_id) REFERENCES common_player_info(person_id)
+GO
